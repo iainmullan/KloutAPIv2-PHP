@@ -213,14 +213,7 @@ class KloutAPIv2 {
 	 * @param String $url The base url to query
 	 * @param Array $params The parameters to pass to the request
 	 */
-	private function Request($url,$params=false,$type=HTTP_GET){
-
-		$cachedUrl = $type.$this->MakeUrl($url,$params);
-		$cachedKey = md5($cachedUrl);
-
-		if (($response = Cache::read($cachedKey, 'klout')) !== FALSE) {
-			return json_decode($response, true);
-		}
+	protected function Request($url,$params=false,$type=HTTP_GET){
 
 		// Populate data for the GET request
 		if($type == HTTP_GET) {
@@ -250,9 +243,7 @@ class KloutAPIv2 {
 		$info=curl_getinfo($ch);
 		curl_close($ch);
 
-		Cache::write($cachedKey, $result, 'klout');
-
-		return json_decode($result, true);
+		return $result;
 	}
 
 	/**
