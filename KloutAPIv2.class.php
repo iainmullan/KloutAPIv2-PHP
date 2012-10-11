@@ -55,9 +55,8 @@ class KloutAPIv2 {
 		$params['key'] = $this->KloutKey;
 		// Return the result;
 		$CurlResult = $this->GET($url,$params);
-		$ResultString = json_decode($CurlResult);
 		// Assume it only returns "ks" data:
-		$KloutID = $ResultString->id;
+		$KloutID = $CurlResult['id'];
 
 		return $KloutID;
 	}
@@ -75,9 +74,8 @@ class KloutAPIv2 {
 		$params['key'] = $this->KloutKey;
 		// Return the result;
 		$CurlResult = $this->GET($url,$params);
-		$ResultString = json_decode($CurlResult);
 		// Assume it only returns "ks" data:
-		$KloutID = $ResultString->id;
+		$KloutID = $CurlResult['id'];
 
 		return $KloutID;
 	}
@@ -177,8 +175,7 @@ class KloutAPIv2 {
 	public function KloutScore($id){
 		// Use the Klout Score Data call to pull just the Score
 		$CurlResult = $this->KloutUserScore($id);
-		$ResultString = json_decode($CurlResult);
-		$KloutScore = $ResultString->score;
+		$KloutScore = $CurlResult['score'];
 
 		return $KloutScore;
 	}
@@ -192,13 +189,12 @@ class KloutAPIv2 {
 	public function KloutScoreChanges($id, $period){
 		// Use the Klout Score Data call to pull just the Score
 		$CurlResult = $this->KloutUserScore($id);
-		$ResultString = json_decode($CurlResult);
 		if ($period == "day") {
-			$KloutScoreChanges = $ResultString->scoreDelta->dayChange;
+			$KloutScoreChanges = $CurlResult['scoreDelta']['dayChange'];
 		} elseif ($period == "week") {
-			$KloutScoreChanges = $ResultString->scoreDelta->weekChange;
+			$KloutScoreChanges = $CurlResult['scoreDelta']['weekChange'];
 		} else {
-			$KloutScoreChanges = $ResultString->scoreDelta->monthChange;
+			$KloutScoreChanges = $CurlResult['scoreDelta']['monthChange'];
 		}
 		return $KloutScoreChanges;
 	}
