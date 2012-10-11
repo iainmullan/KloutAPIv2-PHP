@@ -215,10 +215,17 @@ class KloutAPIv2 {
 	 */
 	private function Request($url,$params=false,$type=HTTP_GET){
 
-		// Populate data for the GET request
-		if($type == HTTP_GET) $url = $this->MakeUrl($url,$params);
+		$cachedUrl = $type.$this->MakeUrl($url,$params);
+		$cachedKey = md5($cachedUrl);
 
-		CakeLog::write('score', $url);
+		if (($response = Cache::read($cachedKey, 'klout')) !== FALSE) {
+			return json_decode($response, true);
+		}
+
+		// Populate data for the GET request
+		if($type == HTTP_GET) {
+			$url = $this->MakeUrl($url,$params);
+		}
 
 		// borrowed from Andy Langton: http://andylangton.co.uk/
 		$ch = curl_init();
@@ -242,6 +249,8 @@ class KloutAPIv2 {
 		$result=curl_exec($ch);
 		$info=curl_getinfo($ch);
 		curl_close($ch);
+
+		Cache::write($cachedKey, $result, 'klout');
 
 		return json_decode($result, true);
 	}
