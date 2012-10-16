@@ -175,6 +175,9 @@ class KloutAPIv2 {
 	public function KloutScore($id){
 		// Use the Klout Score Data call to pull just the Score
 		$CurlResult = $this->KloutUserScore($id);
+		if (!isset($CurlResult['score'])) {
+			return false;
+		}
 		$KloutScore = $CurlResult['score'];
 
 		return $KloutScore;
